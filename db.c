@@ -64,6 +64,7 @@ const uint32_t ROWS_PER_PAGE = PAGE_SIZE / ROW_SIZE;
 const uint32_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 
 
+
 void serialize_row(Row* source, void* destination) {
     memcpy(destination+ID_OFFSET, &(source->id), ID_SIZE);
     strncpy(destination+USERNAME_OFFSET, source->username, USERNAME_SIZE);
