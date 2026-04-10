@@ -40,6 +40,12 @@ typedef struct {
 } Table;
 
 typedef struct {
+    Table* table;
+    uint32_t row_num;
+    bool end_of_table;
+} Cursor;
+
+typedef struct {
     StatementType type;
     Row row_to_insert;
 } Statement;
@@ -319,6 +325,14 @@ Table* db_open(const char* filename) {
     table->pager = pager;
     table->num_rows = num_rows;
     return table;
+}
+
+Cursor* table_start(Table* table) {
+
+}
+
+Cursor* table_end(Table* table) {
+    
 }
 
 
