@@ -246,6 +246,12 @@ void close_input_buffer(InputBuffer* input_buffer) {
     free(input_buffer);
 }
 
+uint32_t* leaf_node_num_cells() {}
+void* leaf_node_cell() {}
+uint32_t* leaf_node_key() {}
+void* leaf_node_value() {}
+void initialize_leaf_node() {}
+
 
 Cursor* table_start(Table* table) {
     Cursor* cursor = malloc(sizeof(Cursor));
