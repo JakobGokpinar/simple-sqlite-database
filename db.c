@@ -288,6 +288,17 @@ void print_leaf_node(void* node) {
     }
 }
 
+void set_node_type(void* node, NodeType type) {
+    uint8_t value = type;
+    *((uint8_t*)(node + NODE_TYPE_OFFSET)) = value;
+}
+
+
+NodeType get_node_type(void* node) {
+    uint8_t value = (*(uint8_t*)(node + NODE_TYPE_OFFSET));
+    return (NodeType) value;
+}
+
 Cursor* leaf_node_find(Table* table, uint32_t page_num, uint32_t key) {
     void* node = get_page(table->pager, page_num);
     uint32_t num_cells = *leaf_node_num_cells(node);
