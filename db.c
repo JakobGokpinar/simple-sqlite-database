@@ -24,6 +24,7 @@ typedef enum { STATEMENT_INSERT, STATEMENT_SELECT } StatementType;
 typedef enum { EXECUTE_SUCCESS, EXECUTE_DUPLICATE_KEY, EXECUTE_TABLE_FULL } ExecuteResult;
 
 
+
 typedef struct {
     uint32_t id;
     char username[COLUMN_USERNAME_SIZE+1];
