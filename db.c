@@ -29,6 +29,8 @@ typedef enum { EXECUTE_SUCCESS, EXECUTE_DUPLICATE_KEY, EXECUTE_TABLE_FULL } Exec
 
 
 
+
+
 typedef struct {
     uint32_t id;
     char username[COLUMN_USERNAME_SIZE+1];
