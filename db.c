@@ -24,14 +24,6 @@ typedef enum { STATEMENT_INSERT, STATEMENT_SELECT } StatementType;
 
 typedef enum { EXECUTE_SUCCESS, EXECUTE_DUPLICATE_KEY, EXECUTE_TABLE_FULL } ExecuteResult;
 
-
-
-
-
-
-
-
-
 typedef struct {
     uint32_t id;
     char username[COLUMN_USERNAME_SIZE+1];
@@ -127,6 +119,7 @@ const uint32_t INTERNAL_NODE_KEY_SIZE = sizeof(uint32_t);
 const uint32_t INTERNAL_NODE_CHILD_SIZE = sizeof(uint32_t);
 const uint32_t INTERNAL_NODE_CELL_SIZE = INTERNAL_NODE_CHILD_SIZE + INTERNAL_NODE_KEY_SIZE;
 
+
 void set_node_type(void* node, NodeType type) {
     uint8_t value = type;
     *((uint8_t*)(node + NODE_TYPE_OFFSET)) = value;
@@ -157,8 +150,14 @@ void deserialize_row(void* source, Row* destination) {
     memcpy(&(destination->email), source+EMAIL_OFFSET, EMAIL_SIZE);
 }
 
-void print_row(Row* row) {
-    printf("(%d, %s, %s)\n", row->id, row->username, row->email);
+bool is_node_root(void* node) {
+    uint8_t value = *((uint8_t*)(node + IS_ROOT_OFFSET));
+    return (bool)value;
+}
+
+void set_node_root(void* node, bool is_root) {
+    uint8_t value = is_root;
+    *((uint8_t*)(node + IS_ROOT_OFFSET)) = value;
 }
 
 uint32_t get_unused_page_num(Pager* pager) { return pager->num_pages; }
@@ -189,6 +188,20 @@ uint32_t* internal_node_child(void* node, uint32_t child_num) {
 
 uint32_t* internal_node_key(void* node, uint32_t key_num) {
     return internal_node_cell(node, key_num) + INTERNAL_NODE_CHILD_SIZE;
+}
+
+NodeType get_node_type(void* node) {
+    uint8_t value = (*(uint8_t*)(node + NODE_TYPE_OFFSET));
+    return (NodeType) value;
+}
+
+uint32_t get_node_max_key(void* node) {
+    switch(get_node_type(node)) {
+        case NODE_INTERNAL: 
+            return *internal_node_key(node, *internal_node_num_keys(node) - 1);
+        case NODE_LEAF:
+            return *leaf_node_key(node, *leaf_node_num_cells(node) - 1);
+    }
 }
 
 void* get_page(Pager* pager, uint32_t page_num) {
@@ -311,6 +324,10 @@ void leaf_node_split_and_insert(Cursor* cursor, uint32_t key, Row* value) {
 
 void print_prompt() { printf("db > "); }
 
+void print_row(Row* row) {
+    printf("(%d, %s, %s)\n", row->id, row->username, row->email);
+}
+
 void db_close(Table* table) {
     Pager* pager = table->pager;
 
@@ -404,11 +421,6 @@ void print_leaf_node(void* node) {
     }
 }
 
-
-NodeType get_node_type(void* node) {
-    uint8_t value = (*(uint8_t*)(node + NODE_TYPE_OFFSET));
-    return (NodeType) value;
-}
 
 Cursor* leaf_node_find(Table* table, uint32_t page_num, uint32_t key) {
     void* node = get_page(table->pager, page_num);
