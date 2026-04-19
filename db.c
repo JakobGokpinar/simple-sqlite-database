@@ -258,6 +258,8 @@ void cursor_advance(Cursor* cursor) {
 
 
 
+
+
 void pager_flush(Pager* pager, uint32_t page_num) {
     if (pager->pages[page_num] == NULL) {
         printf("Tried to flush null page\n");
