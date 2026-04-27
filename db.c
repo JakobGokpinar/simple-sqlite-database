@@ -30,6 +30,8 @@ typedef struct {
     char email[COLUMN_EMAIL_SIZE+1];
 } Row;
 
+
+
 typedef struct {
     int file_descriptor;
     uint32_t file_length;
